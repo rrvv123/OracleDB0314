@@ -8,8 +8,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -88,7 +90,7 @@ public class MemoRepositoryTests {
     @Test
     public void testPageDefault(){
         //한 페이지당 10개의 Entity = 10개의 행을 뜻함.
-        Pageable pageable = PageRequest.of(1, 10);
+        Pageable pageable = PageRequest.of(0, 10);
 
         Page<Memo> result = memoRepository.findAll(pageable);
 
@@ -119,5 +121,41 @@ public class MemoRepositoryTests {
         result.get().forEach(memo -> {
             System.out.println("number: " + memo.getMno() + ", content: " + memo.getMemoText());
         });
+    }
+
+    @Test
+    public void testQueryMethod(){
+        List<Memo> list = memoRepository.findByMnoBetweenOrderByMnoDesc(20L, 30L);
+
+        for (Memo memo : list){
+            System.out.println(memo.toString());
+        }
+    }
+
+    @Test
+    public void testQueryMethod2(){
+        Pageable pageable = PageRequest.of(0,10, Sort.by("mno").descending());
+        Page<Memo> result = memoRepository.findByMnoBetween(20L, 30L, pageable);
+
+        for (Memo memo : result){
+            System.out.println(memo.toString());
+        }
+
+        System.out.println("============================================");
+
+        pageable = PageRequest.of(0,10);
+        result = memoRepository.findByMnoBetween(20L, 30L, pageable);
+
+        result.get().forEach(memo -> {
+            System.out.println(memo);
+        });
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testQueryMethod3(){
+        memoRepository.deleteMemoByMnoLessThan(5L);
+        testPageDefault();
     }
 }
