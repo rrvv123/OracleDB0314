@@ -158,4 +158,12 @@ public class MemoRepositoryTests {
         memoRepository.deleteMemoByMnoLessThan(5L);
         testPageDefault();
     }
+
+    @Test
+    public void testQueryAnnotationNative(){
+        List<Memo> result = memoRepository.getNativeResult();
+        for (Memo memo : result){
+            System.out.println(memo);
+        }
+    }
 }
