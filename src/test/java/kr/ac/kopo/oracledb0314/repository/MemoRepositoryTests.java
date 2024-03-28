@@ -166,4 +166,12 @@ public class MemoRepositoryTests {
             System.out.println(memo);
         }
     }
+
+    @Test
+    public void testQueryAnnotationNative2(){
+        List<Object[]> result = memoRepository.getNativeResult2(); // object는 최상위 클래스. []는 1차원
+        for (Object[] memoObj: result){
+            System.out.println(memoObj[1]);
+        }
+    }
 }
