@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -96,5 +97,27 @@ public class MemoRepositoryTests {
         for (Memo memo : result.getContent()){
             System.out.println(memo);
         }
+
+        System.out.println("=================================================");
+
+        System.out.println("Total Pages: " + result.getTotalPages()); // 총 몇 페이지
+        System.out.println("Total Count: " + result.getTotalElements()); // 전체 페이지
+        System.out.println("Page Number: " + result.getNumber()); // 현재 페이지 번호 0부터 시작
+        System.out.println("Page Size: " + result.getSize()); // 페이지당 데이터 개수
+        System.out.println("has next page?: " + result.hasNext()); // 다음 페이지 존재 여부
+        System.out.println("first page?: " + result.isFirst()); // 시작 페이지(0) 여부
+
+        System.out.println("=================================================");
+    }
+
+    @Test
+    public void testSort(){
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("mno").descending());
+
+        Page<Memo> result = memoRepository.findAll(pageable);
+
+        result.get().forEach(memo -> {
+            System.out.println("number: " + memo.getMno() + ", content: " + memo.getMemoText());
+        });
     }
 }
